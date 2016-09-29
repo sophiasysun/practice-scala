@@ -33,17 +33,27 @@ object Options {
    * - empty:  return "empty"	        E.g. None is "empty"
    * - does not exist: 					"not existing"
    */
-  def roomState(rooms: Map[Int, Option[String]], room: Int): String = {
-    error("Fix me")
-  }
-
+  def roomState(rooms: Map[Int, Option[String]], room: Int): String = 
+       rooms.get(room) match {
+       case Some(Some(number))   ⇒ number
+       case Some(Some("locked")) ⇒ "not available"
+       case Some(None)           ⇒ "empty"
+       case None                 ⇒ "not existing"
+     }
+   
+  
   /**
    * Calculate the total amount of people in all rooms
 	 *
    * Hint: define a helper function that computes a room's occupancy
    * to convert a possible numeric String (e.g. Some("12")) to an integer
    */
-  def totalPeopleInRooms(rooms: Map[Int, Option[String]]): Int = {
-    error("Fix me")
+
+ def occupancy(room : Option[String]) : Int = room match {
+       case None | Some("locked") ⇒ 0
+       case Some(s)               ⇒ s.toInt
+    }
+ 
+ def totalPeopleInRooms(rooms: Map[Int, Option[String]]): Int = 
+        rooms.values.map(occupancy).sum
   }
-}
