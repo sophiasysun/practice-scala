@@ -30,15 +30,13 @@ object Collections {
    * Hint: there is a built-in function for this you can use.
    * 
    */
-  def firstElementInList[T](l: List[T]): T = {
-    error("fix me")
-  }
+  def firstElementInList[T](l: List[T]): T = l.head; 
 
   /**
    * Get the sum of all the elements in the list, e.g. sumOfList(List(1,2,3)) = 6.
    */
   def sumOfList(l: List[Int]): Int = {
-    error("fix me")
+    l.sum
   }
 
   /**
@@ -50,9 +48,9 @@ object Collections {
    *  - by using a foldLeft function
    *  - ... etc
    */
-  def lastElementInList[T](l: List[T]): T = {
-    error("fix me")
-  }
+  def lastElementInList[T](l: List[T]): T = l.last
+  // not intuitive: if getting the first element can be done by l.head, then I would 
+  // expect to get the last element by calling l.tail
 
    /**
    * Get the nth element in the list, e.g. nthElementInList(3, List(1,2,3,4)) = 3.
@@ -64,9 +62,15 @@ object Collections {
    *    zipWithIndex function, that is available on a List)
    *  - ... etc
    */
-  def nthElementInList[T](n: Int, l: List[T]): T = {
-    error("fix me")
-  }
+  
+    
+  // wanted to reduce the first n elements of the list and then take the head of the 
+  // remaining list, then realized that was much more difficult than I thought 
+  def nthElementInList[T](n: Int, l: List[T]): T = l(n)
+  
+  //def nthElementInList[T](n: Int, l: List[T]): T = {
+  // l(n)
+  // }
 
   /**
    * Concatenate two lists into one, e.g. 
@@ -78,9 +82,22 @@ object Collections {
    *  - custom made
    *  - ... etc 
    */
-  def concatLists[T](l1: List[T], l2: List[T]): List[T] = {
-    error("fix me")
-  }
+  def addElement[T](l: List[T], e:T) = l:+ e
+ 
+  
+  def concatLists[T](l1: List[T], l2: List[T]): List[T] = 
+    l1 ::: l2;
+ 
+
+    // as you can tell, one thing I wanted to do was to use a for loop
+    // to add the element at the nth index of l2 to l1
+    // would appreciate help about how to make this work
+    // val a = 0;
+    // for (a <- 1 to l2.size) { 
+    // addElement(l1, l2(a))
+    // }
+    // }
+ 
 
   /**
    * Sort a list on the natural ordering, so sortList(3,1,2) = List(1,2,3).
@@ -91,9 +108,7 @@ object Collections {
    * - ... whichever way you like 
    * 
    */
-  def sortList[T <% Ordered[T]](list: List[T]): List[T] = {
-    error("fix me")
-  }
+  def sortList[T <% Ordered[T]](list: List[T]): List[T] = list.sorted
 
   /**
    * Check whether a given element in a list exists, 
@@ -103,7 +118,7 @@ object Collections {
    * to implement in your own free-style way.
    */
   def elementExists[T](l: List[T], e: T): Boolean = {
-    error("fix me")
+    l contains e
   }
 
   /**
@@ -113,10 +128,26 @@ object Collections {
    * As always, use either build-in functions, or roll your own way via a
    * pattern match or some other method.
    */
+  
+  def isOdd(i: Integer) = {
+    if ((i%2) != 0) true
+    else false
+  }
+  
   def oddElements(iList: List[Int]): List[Int] = {
-    error("fix me")
+     // this was Prof Ben's solution 
+     iList.filter(_ % 2 != 0)
   }
 
+  
+  def roomState(rooms: Map[Int, Option[String]], room: Int): String = 
+       rooms.get(room) match {
+       case Some(Some(number))   ⇒ number
+       case Some(Some("locked")) ⇒ "not available"
+       case Some(None)           ⇒ "empty"
+       case None                 ⇒ "not existing"
+     }
+  
   /**
    * Returns a list of lists, containing all final segments of the argument 
    * list, longest first.
@@ -129,67 +160,48 @@ object Collections {
    * Implement it whatever way suites you best. Hint: it can be done in a 
    * neat way using recursion. 
    */
-  def tails[T](l: List[T]): List[List[T]] = {
-    error("fix me")
-  }
+  def tails[T](l: List[T]): List[List[T]] = 
+    if (l.isEmpty) List(l) 
+    else l::tails(l.tail)
   
   /**
    * Find the maximum element in a list, e.g. maxElementInList(List(1,9,3,5)) == 9
    * 
    * As usual, various ways exist: pattern matching, folding, ...
    */
-  def maxElementInList(l: List[Int]): Int = {
-    error("fix me")
-  }
+  def maxElementInList(l: List[Int]): Int = l.max
 
   /**
    * Calculate the sum of the equally position elements
    * of the two list
    */
+  
   def sumOfTwo(l1: List[Int], l2: List[Int]): List[Int] = {
-    error("fix me")
+  // This was Prof Ben's solution -- I tried many different things that 
+  // ended up not working out.
+  // I tried doing a for loop and adding every nth element from 
+  // l2 to the nth element in l1... and am not sure what went wrong.
+    if (l1.isEmpty) l2
+    else if (l2.isEmpty) l1
+    else (l1.zip(l2)).map(p ⇒ p._1 + p._2)
   }
 
   /**
    *  For this exercise preferably make use of the sumOfTwo
    * method above
    */
-  def sumOfMany(l: List[Int]*): List[Int] = {
-    error("fix me")
-  }
-
-  case class Person(age: Int, firstName: String, lastName: String)
+  def sumOfMany(l: List[Int]*): List[Int] = (List.empty[Int] /: l)(sumOfTwo)
+ 
+    case class Person(age: Int, firstName: String, lastName: String)
 
   /**
    * The following method is implemented in the most inelegant way we could think of.
    * The idea is to rewrite the method into more functional style. 
    */
   def separateTheYoungFromTheOld(persons: List[Person]): List[List[String]] = {
-    var youngins: ListBuffer[Person] = new ListBuffer[Person]()
-    var elders: ListBuffer[Person] = new ListBuffer[Person]()
-    var validYoungNames: ListBuffer[String] = new ListBuffer[String]()
-    var validOldNames: ListBuffer[String] = new ListBuffer[String]()
-
-    for (person <- persons) {
-        if (person.age < 18) {
-          youngins += person
-        } else {
-          elders += person
-        }
-    }
-
-    var sortedYoung = youngins.toList.sortBy(_.age)
-    var sortedOld = elders.toList.sortBy(_.age)
-
-    for (young <- sortedYoung) {
-      validYoungNames += young.firstName
-    }
-    for (old <- sortedOld) {
-      validOldNames += old.firstName
-    }
-    
-    List(validYoungNames.toList, validOldNames.toList)
-  }
+    List (persons.filter(_.age < 18).sortBy(_.age).map(_.firstName), 
+         persons.filter(_.age >= 18).sortBy(_.age).map(_.firstName))
+  } 
 }
 
 
